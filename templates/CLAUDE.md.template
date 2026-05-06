@@ -1,0 +1,30 @@
+---
+
+## 部署工程規範（Harness Engineering SOP）
+
+### 適用範圍
+D:\SideProject\ 下的所有專案。
+
+### 共用資源位置
+- 部署標準：D:\SideProject\_shared\docs\DEPLOY_STANDARD.md
+- 環境探測：D:\SideProject\_shared\tools\env-probe.sh
+- 環境統一化：D:\SideProject\_shared\tools\setup.sh
+- 回復腳本：D:\SideProject\_shared\tools\rollback.sh
+
+### 開發前必做
+1. 讀取 D:\SideProject\_shared\docs\DEPLOY_STANDARD.md
+2. 若有 env-probe 報告，先分析差異再開始開發
+3. 所有程式碼只針對 DEPLOY_STANDARD 開發，不針對特定主機
+
+### 程式碼限制（絕對，適用所有專案）
+- 不可使用 rm -rf 或任何不可回復的刪除指令
+- 不可修改 /etc/ldap/ 或 /etc/freeradius/
+- 不可開放新的防火牆 port
+- 不可新增系統帳號
+- 所有套件安裝必須指向內部 PyPI mirror
+- 所有檔案操作必須限制在 /opt/apps/{專案}/ 內
+
+### 開發完成後必做
+- 確認有 --health-check 入口（python3 main.py --health-check）
+- 確認 requirements.txt 所有套件都鎖定版本
+- git commit 並更新 claude-progress.txt
