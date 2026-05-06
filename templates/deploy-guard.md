@@ -40,9 +40,8 @@ model: claude-sonnet-4-6
 - [ ] rm -rf 或任何危險刪除指令
 - [ ] 硬編碼 IP 或 hostname
 - [ ] 對外網路連線（連線到非內網的 URL）
-- [ ] 修改 /etc/ 下的任何檔案
-- [ ] 嘗試停止或重啟 project-context.md 中標記為關鍵的 systemd 服務
-- [ ] 嘗試停止或重啟 project-context.md 中標記為關鍵的 Docker container
+- [ ] 修改 /etc/ 下的任何設定檔（需另行申請）
+- [ ] 停止或重啟 project-context.md 中標記為關鍵的服務（含 Docker container）
 - [ ] 修改 ufw 規則或開放新的防火牆 port
 - [ ] 未在 DEPLOY_STANDARD 允許清單內的套件
 - [ ] 缺少 --health-check 入口
