@@ -18,7 +18,8 @@ D:\SideProject\ 下的所有專案。
 
 ### 程式碼限制（絕對，適用所有專案）
 - 不可使用 rm -rf 或任何不可回復的刪除指令
-- 不可修改 /etc/ldap/ 或 /etc/freeradius/
+- 不可修改 /etc/ 下的任何設定檔（需另行申請）
+- 不可停止任何 project-context.md 中標記為關鍵的服務（含 Docker container）
 - 不可開放新的防火牆 port
 - 不可新增系統帳號
 - 所有套件安裝必須指向內部 PyPI mirror
