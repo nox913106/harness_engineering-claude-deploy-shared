@@ -74,7 +74,52 @@
 - 直接停止 slapd 或 freeradius 服務
 - 修改 crontab（需人工確認）
 
+## 11. 跨 Session 狀態保留
+
+每個專案必須維護以下兩個狀態檔案，放在專案根目錄：
+
+### claude-progress.txt
+記錄目前開發進度，讓每個新 Session 開始時不需要重新猜現狀。
+
+必須包含：
+- 最後更新時間
+- 目前完成的功能（摘要）
+- 下一步待做的事
+- 已知問題或阻塞點
+- 相關的 git commit hash
+
+更新時機：
+- 每次完成一個功能後
+- 每次 git commit 後
+- 每次 Session 結束前
+
+### feature-list.json
+結構化追蹤所有功能的完成狀態。
+格式參考：D:\SideProject\_shared\templates\feature-list.template.json
+
+更新規則：
+- 功能完成且測試通過後，才將 passes 改為 true
+- 不可在功能未驗證前標記為完成
+- 每次更新後必須 git commit
+
+---
+
+## 12. Audit Trail（操作紀錄）
+
+所有部署相關操作必須透過 audit-log.sh 記錄，包含：
+- 操作時間
+- 操作類型（env-probe / setup / deploy / rollback）
+- 執行帳號（脫敏）
+- 專案名稱
+- 執行結果（success / failed）
+- 失敗原因（如有）
+
+audit log 存放位置：/opt/apps/{專案}/logs/audit.log
+格式：JSON Lines（每行一筆紀錄）
+保留期限：180 天
+
 ## 版本紀錄
 | 版本 | 日期 | 說明 |
 |------|------|------|
 | v1.0 | 2026-05-05 | 初版建立 |
+| v1.1 | 2026-05-15 | 增訂項目11、12 |

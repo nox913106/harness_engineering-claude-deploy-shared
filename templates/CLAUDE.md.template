@@ -29,3 +29,19 @@ D:\SideProject\ 下的所有專案。
 - 確認有 --health-check 入口（python3 main.py --health-check）
 - 確認 requirements.txt 所有套件都鎖定版本
 - git commit 並更新 claude-progress.txt
+
+### 跨 Session 狀態保留（每次 Session 結束前必做）
+- 更新 claude-progress.txt：
+  - 最後更新時間
+  - 本次完成了什麼
+  - 下一步待做的事
+  - 已知問題
+  - 相關 git commit hash
+- 更新 feature-list.json：
+  - 完成且測試通過的功能，passes 改為 true
+  - 未完成或未測試的，不可提前標記為完成
+- git commit（附上清楚說明）
+
+### Audit Trail
+- 所有部署操作透過 tools/audit-log.sh 記錄
+- 不可手動修改或刪除 audit.log

@@ -1,0 +1,27 @@
+{
+  "project": "專案名稱",
+  "version": "1.0.0",
+  "last_updated": "YYYY-MM-DD HH:MM",
+  "summary": {
+    "total": 0,
+    "completed": 0,
+    "pending": 0,
+    "blocked": 0
+  },
+  "features": [
+    {
+      "id": "F001",
+      "description": "功能描述",
+      "passes": false,
+      "status": "pending",
+      "notes": "",
+      "commit": ""
+    }
+  ],
+  "status_definitions": {
+    "pending": "尚未開始",
+    "in_progress": "開發中",
+    "completed": "完成且測試通過",
+    "blocked": "有阻塞點，無法繼續"
+  }
+}

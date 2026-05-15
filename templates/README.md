@@ -93,6 +93,17 @@ DEPLOY_STANDARD 在哪裡？
 
 ---
 
+### 驗證五：確認新功能規範載入
+
+在 Claude Code 輸入：
+
+​```
+這個專案的 claude-progress.txt 和 feature-list.json 要放在哪裡？
+​```
+
+✅ 期待：說明放在專案根目錄，並描述更新時機
+❌ 失敗：不知道這兩個檔案，代表 CLAUDE.md 規範未正確載入
+
 ## 驗證結果總覽
 
 還原完成後，請在這裡記錄：
