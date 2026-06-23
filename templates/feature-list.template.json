@@ -12,6 +12,9 @@
     {
       "id": "F001",
       "description": "功能描述",
+      "for_who": "這個功能是給誰用的",
+      "done_looks_like": "做完的樣子（驗收條件）",
+      "is_mvp": true,
       "passes": false,
       "status": "pending",
       "notes": "",

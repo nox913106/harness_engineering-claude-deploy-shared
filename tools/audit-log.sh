@@ -1,50 +1,37 @@
 #!/bin/bash
 # =============================================================================
 # audit-log.sh — 操作紀錄腳本 v1.0
-# 用途：記錄所有部署相關操作，產生可追溯的 audit trail
+# 用途：記錄所有部署相關操作
 # 使用方式：
-#   source audit-log.sh  （在其他腳本中引用）
-#   或直接呼叫：bash audit-log.sh [動作] [專案] [結果] [說明]
+#   source audit-log.sh
+#   audit_log [動作] [專案] [結果] [說明]
 # =============================================================================
 
-AUDIT_ACTION="${1:-unknown}"
-AUDIT_PROJECT="${2:-unknown}"
-AUDIT_RESULT="${3:-unknown}"
-AUDIT_NOTE="${4:-}"
+AUDIT_LOG_DIR="${AUDIT_LOG_DIR:-/opt/apps}"
 
-LOG_DIR="/opt/apps/${AUDIT_PROJECT}/logs"
-LOG_FILE="${LOG_DIR}/audit.log"
+audit_log() {
+    local ACTION="${1:-unknown}"
+    local PROJECT="${2:-unknown}"
+    local RESULT="${3:-unknown}"
+    local MESSAGE="${4:-}"
+    local LOG_FILE="$AUDIT_LOG_DIR/$PROJECT/logs/audit.log"
 
-# 確保 log 目錄存在
-mkdir -p "$LOG_DIR" 2>/dev/null
+    mkdir -p "$(dirname "$LOG_FILE")" 2>/dev/null || true
 
-# 產生一筆 JSON Lines 紀錄
-ENTRY=$(cat << ENTRY_EOF
-{"timestamp":"$(date -u '+%Y-%m-%dT%H:%M:%SZ')","action":"${AUDIT_ACTION}","project":"${AUDIT_PROJECT}","user":"[DEPLOY-USER]","host":"[HOST]","result":"${AUDIT_RESULT}","note":"${AUDIT_NOTE}"}
-ENTRY_EOF
-)
+    local ENTRY
+    ENTRY=$(printf '{"timestamp":"%s","action":"%s","project":"%s","user":"%s","result":"%s","message":"%s"}\n' \
+        "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+        "$ACTION" \
+        "$PROJECT" \
+        "$(whoami)" \
+        "$RESULT" \
+        "$MESSAGE")
 
-# 寫入 audit log
-echo "$ENTRY" >> "$LOG_FILE"
+    echo "$ENTRY" >> "$LOG_FILE"
+    echo "📋 Audit: [$RESULT] $ACTION — $PROJECT ${MESSAGE:+| $MESSAGE}"
+}
 
-# 清理超過 180 天的紀錄（保留最近 180 天）
-if [ -f "$LOG_FILE" ]; then
-    CUTOFF=$(date -d "180 days ago" '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || \
-             date -v-180d '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null)
-    if [ -n "$CUTOFF" ]; then
-        # 只保留 cutoff 之後的紀錄
-        awk -v cutoff="$CUTOFF" \
-            'BEGIN{FS="\""} {
-                for(i=1;i<=NF;i++) {
-                    if($i=="timestamp") {ts=$(i+2)}
-                }
-                if(ts >= cutoff) print
-            }' "$LOG_FILE" > "${LOG_FILE}.tmp" && \
-        mv "${LOG_FILE}.tmp" "$LOG_FILE"
-    fi
-fi
-
-# 如果是直接呼叫（非 source），輸出確認
-if [ "${BASH_SOURCE[0]}" = "$0" ]; then
-    echo "✅ Audit log 已記錄：$AUDIT_ACTION / $AUDIT_PROJECT / $AUDIT_RESULT"
+# 如果直接執行（非 source）
+if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
+    audit_log "${1:-}" "${2:-}" "${3:-success}" "${4:-}"
 fi
